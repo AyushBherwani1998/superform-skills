@@ -46,13 +46,6 @@ Install with the [skills CLI](https://www.npmjs.com/package/skills):
 npx skills add AyushBherwani1998/superform-skills
 ```
 
-Or clone the repository and link it into your Claude Code skills directory:
-
-```bash
-git clone https://github.com/AyushBherwani1998/superform-skills.git
-ln -s "$(pwd)/superform-skills" ~/.claude/skills/superform-supervaults
-```
-
 ## Structure
 
 ```text
@@ -82,16 +75,6 @@ workflows/
 - "Is my superTSLA withdrawal ready to claim?"
 - "Claim my Superform rewards."
 
-## Safety notes
-
-- During redemption, the bundler can return a `setOperator` transaction that grants a third-party contract rights over your requests. It isn't required. The skill skips it unless the operator is on Superform's [published deployment addresses](https://docs.superform.xyz/deployment-addresses) and you agree.
-- Approvals are checked for exact amounts. Unlimited approvals are flagged.
-- Stock vaults take tokenized stocks, such as NVDAc and TSLAc, which may be restricted in your jurisdiction.
-- Most of the APY on stock vaults currently comes from reward campaigns, partly paid in Superform's sUP token. These rates can change or end.
-
-## Status
-
-Deposit, redemption request, and redemption claim were verified end to end on superTSLA on Base in October 2026. Reward claims and non-Base chains haven't been tested with live transactions yet.
 
 ## References
 
