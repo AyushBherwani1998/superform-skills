@@ -1,6 +1,6 @@
 # Onchain reads
 
-Read share balances and redemption state directly from the vault contract with `eth_call`. Use the RPC for the vault's chain. See [chains.md](chains.md).
+Read token balances, share balances, and redemption state directly from the contracts with `eth_call`. Use the RPC for the vault's chain. See [chains.md](chains.md).
 
 ```bash
 curl -s -X POST <rpc> -H 'Content-Type: application/json' \
@@ -15,12 +15,24 @@ The result is a hex `uint256`. Convert it to a decimal raw amount, then to human
 
 | Read | Function | Calldata | Units |
 | --- | --- | --- | --- |
-| Share balance | `balanceOf(acct)` | `0x70a08231<acct>` | Shares |
+| Token balance | `balanceOf(acct)` on the token contract | `0x70a08231<acct>` | Token decimals |
+| Share balance | `balanceOf(acct)` on the vault | `0x70a08231<acct>` | Shares |
 | Pending redemption | `pendingRedeemRequest(0, acct)` | `0xf5a23d8d` + 64 zeros + `<acct>` | Shares |
 | Claimable redemption | `claimableRedeemRequest(0, acct)` | `0xeaed1d07` + 64 zeros + `<acct>` | Shares |
 | Claimable assets | `maxWithdraw(acct)` | `0xce96cb77<acct>` | Deposit token |
 
 SuperVaults always use request ID `0`.
+
+## Token balance
+
+Read ERC-20 balances, such as the deposit token, onchain instead of with `mm wallet balance`. The `mm` balance list omits tokens without a price feed, including tokenized stocks like `TSLAc` and `NVDAc`.
+
+```bash
+curl -s -X POST <rpc> -H 'Content-Type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"eth_call","params":[{"to":"<token>","data":"0x70a08231<acct>"},"latest"]}'
+```
+
+For example, a result of `0x...404318` is `4211480` raw, which is `0.0421148` of an 8-decimal token.
 
 ## Redemption state
 

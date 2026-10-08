@@ -7,7 +7,7 @@ The skill uses Superform's public APIs, which need no API key. It fetches vault 
 ## What you can do
 
 - Browse vaults with APY split into strategy yield and rewards, TVL, availability, and timelock.
-- Deposit into a vault, including swapping or bridging into the deposit token first.
+- Deposit into a vault. The skill uses the existing balance first, and swaps or bridges into the deposit token only if the balance is short.
 - Withdraw with ERC-7540 async redemption: request, wait for the keeper, then claim.
 - Check positions, pending withdrawals, and claimable Merkl rewards.
 - Claim rewards when they're worth more than gas.

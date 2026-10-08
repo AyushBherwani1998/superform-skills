@@ -4,7 +4,7 @@ description: Use when the user wants to browse, deposit into, withdraw from, or 
 license: MIT
 metadata:
   author: AyushBherwani1998
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # Superform SuperVaults skill
@@ -54,6 +54,7 @@ These rules apply to every flow.
 - Get the wallet address with `mm wallet address --toon`. Validate every address against `^0x[0-9a-fA-F]{40}$` and every amount against `^\d+\.?\d*$` before you put it in a request body.
 - Use the bundler's `non-smart-account` endpoint only. The agent wallet is an EOA, so never use the ERC-4337 `/executor/*` flow.
 - Decode every execution with `mm decode` and check the target contract before you sign. See [signing.md](references/signing.md).
+- Before a deposit, read the agent wallet's balance of the deposit token onchain with `balanceOf` on the vault's chain. `mm wallet balance` omits unpriced tokens such as tokenized stocks, so don't treat a missing token there as a zero balance. Don't swap or bridge if it already covers the deposit amount. If it covers only part of the amount, swap or bridge just the shortfall, and only after the user confirms. See [deposit.md](workflows/deposit.md#get-the-deposit-token).
 - Skip `setOperator` executions by default. They grant a third-party contract rights over the user's redemption requests and aren't required.
 - Send executions one at a time, in order, and wait for each confirmation.
 - Never sign anything the bundler didn't return for the request you just made.

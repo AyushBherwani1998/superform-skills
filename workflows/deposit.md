@@ -23,16 +23,15 @@ Run [preflight.md](preflight.md) first if it hasn't passed in this session.
 
 ## Get the deposit token
 
-1. Check balances on the vault's chain:
+Always check the agent wallet's balance before you swap or bridge. Don't swap or bridge if the wallet already holds enough of the deposit token on the vault's chain.
 
-   ```bash
-   mm wallet balance --chain-ids <chain> --toon
-   ```
-
-2. If the wallet already holds enough of `assets[0]`, skip to the next section.
-3. If it doesn't, follow the `metamask-agent-wallet` swap or bridge workflow to get the deposit token on the vault's chain. Quote with `--all-quotes`, compare routes, and warn if price impact is above 1%. Tokenized stocks often have thin liquidity.
-4. Confirm the new balance onchain or with `mm wallet balance`.
-5. Check that the wallet has enough native token for gas: an approval, a deposit, and later a redemption and claim.
+1. Read the deposit token balance onchain with `balanceOf(acct)` on `assets[0].address`, using the vault chain's RPC. See [onchain-reads.md](../references/onchain-reads.md#token-balance). Don't rely on `mm wallet balance` for the deposit token. It omits tokens it can't price, such as tokenized stocks like `TSLAc`, so a wallet that holds them can look empty.
+2. Convert the result to human units with `assets[0].decimals` and compare it with the deposit amount.
+3. If the balance is greater than or equal to the deposit amount, don't swap or bridge. Tell the user you're using the existing balance and skip to [Build the deposit](#build-the-deposit).
+4. If the balance is lower than the deposit amount, tell the user the balance and the shortfall. Then ask whether to deposit only the existing balance, or to swap or bridge just the shortfall. Never swap or bridge the full amount when the wallet already holds part of it.
+5. If the user chooses to swap or bridge, follow the `metamask-agent-wallet` swap or bridge workflow to get the shortfall on the vault's chain. Quote with `--all-quotes`, compare routes, and warn if price impact is above 1%. Tokenized stocks often have thin liquidity.
+6. After a swap or bridge, read the deposit token balance onchain again to confirm it.
+7. Check that the wallet has enough native token for gas: an approval, a deposit, and later a redemption and claim. Use `mm wallet balance --chain-ids <chain> --toon` for the native token.
 
 ## Build the deposit
 
